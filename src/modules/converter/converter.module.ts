@@ -1,6 +1,7 @@
 import { Application } from "express";
 import { ConverterController } from "./converter.controller";
 import { ConverterService } from "./converter.service";
+import { registerControllers } from "x-zen";
 
 export class UserModule {
   private converterController: ConverterController;
@@ -12,6 +13,6 @@ export class UserModule {
   }
 
   configure(app: Application) {
-    this.converterController.Router(app);
+    registerControllers(app, [this.converterController]);
   }
 }
