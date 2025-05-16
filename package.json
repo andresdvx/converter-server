@@ -24,6 +24,6 @@
   "dependencies": {
     "express": "^4.19.2",
     "fluent-ffmpeg": "^2.1.3",
-    "x-zen": "^1.0.15"
+    "x-zen": "^1.0.16"
   }
 }

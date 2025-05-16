@@ -2,18 +2,18 @@ import { Request, Response } from "express";
 import { ConverterService } from "./converter.service";
 import { RestController, RestMethod, Get } from "x-zen";
 
-@RestController("/converter")
+@RestController("converter")
 export class ConverterController {
   constructor(private converterService: ConverterService) {}
 
-  @Get("/info")
+  @Get("info")
   @RestMethod({ statusCode: 200, message: "ok" })
   private async getInfo(req: Request, res: Response) {
     const { url } = req.query;
     return await this.converterService.getInfo(url as string);
   }
 
-  @Get("/download")
+  @Get("download")
   public async download(req: Request, res: Response) {
     try {
       const { url, type } = req.query;
