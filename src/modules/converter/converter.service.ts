@@ -35,11 +35,11 @@ export class ConverterService {
       } else {
         const videoStream = streamDownloadAsMp4(url);
 
-        videoStream.stderr.on("data", (data) => {
+        videoStream.stderr.on("data", (data: any) => {
           console.error("yt-dlp stderr:", data.toString());
         });
 
-        videoStream.on("error", (err) => {
+        videoStream.on("error", (err: any) => {
           console.error("yt-dlp process error:", err);
           throw new InternalServerError("Error executing yt-dlp" + err);
         });
