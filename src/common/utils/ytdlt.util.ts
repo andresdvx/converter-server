@@ -50,7 +50,6 @@ export function streamDownloadAsMp4(url: string) {
     url,
     "--no-playlist",
     "-f", "bestvideo+bestaudio",
-    "--merge-output-format", "mp4",
     "-o", "-",
   ]);
 }
