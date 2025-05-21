@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ConverterService } from "./converter.service";
-import { RestController, RestMethod, Get } from "x-zen";
+import { RestController, RestMethod, Get, ErrorHandler } from "x-zen";
 
 @RestController("converter")
 export class ConverterController {
-  constructor(private converterService: ConverterService) {}
+  constructor(private converterService: ConverterService) { }
 
   @Get("info")
   @RestMethod({ statusCode: 200, message: "ok" })
@@ -23,11 +23,7 @@ export class ConverterController {
         res
       );
     } catch (err: any) {
-      res.status(500).json({
-        statusCode: 500,
-        errorMessage: "Internal Server Error",
-        error: err.message,
-      });
+      ErrorHandler(err, res);
     }
   }
 }
