@@ -34,7 +34,7 @@ export function streamDownloadAsMp3(url: string) {
     url,
     "--no-playlist",
     "-f", "bestaudio",
-    "-o", "-", // output to stdout
+    "-o", "-", 
   ]);
 
   return ffmpeg(ytProcess.stdout)
