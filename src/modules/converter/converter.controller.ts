@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
+import { RestController, RestMethod, UseMiddleware, Get, Post, ErrorHandler, Logger } from "x-zen";
 import { ConverterService } from "./converter.service";
-import { RestController, RestMethod, Get, ErrorHandler, Post, Logger } from "x-zen";
+import { authMiddleware } from "./middlewares/authMiddleware";
 
+@UseMiddleware(authMiddleware)
 @RestController("converter")
 export class ConverterController {
   private logger = new Logger({ context: ConverterController.name, timestamp: true });
-
+  
   constructor(private converterService: ConverterService) { }
-
+  
   @Get("info")
   @RestMethod({ statusCode: 200, message: "File Info" })
   private async getInfo(req: Request, res: Response) {
