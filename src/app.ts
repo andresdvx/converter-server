@@ -4,7 +4,7 @@ import { Logger } from "x-zen";
 
 function Bootstrap() {
   const app = express();
-  const logger = Logger.getInstance({context: "BootStrap Application", timestamp: true});
+  const logger = new Logger({context: "BootStrap Application", timestamp: true});
   app.use(express.json());
   app.use(express.urlencoded({extended: false}))
 

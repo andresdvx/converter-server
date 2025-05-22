@@ -1,20 +1,23 @@
 import { Request, Response } from "express";
 import { ConverterService } from "./converter.service";
-import { RestController, RestMethod, Get, ErrorHandler, Post } from "x-zen";
+import { RestController, RestMethod, Get, ErrorHandler, Post, Logger } from "x-zen";
 
 @RestController("converter")
 export class ConverterController {
+  private logger = new Logger({ context: ConverterController.name, timestamp: true });
+
   constructor(private converterService: ConverterService) { }
 
   @Get("info")
   @RestMethod({ statusCode: 200, message: "File Info" })
   private async getInfo(req: Request, res: Response) {
+    this.logger.log("Fetching file info");
     const { url } = req.query;
     return await this.converterService.getInfo(url as string);
   }
 
   @Post("download")
-  public async download(req: Request, res: Response) {
+  public async downloadFile(req: Request, res: Response) {
     try {
       const { url, type } = req.query;
       const { formatId } = req.body;
@@ -25,6 +28,7 @@ export class ConverterController {
         res
       );
     } catch (err: any) {
+      this.logger.error("Error downloading file" + err);
       ErrorHandler(err, res);
     }
   }

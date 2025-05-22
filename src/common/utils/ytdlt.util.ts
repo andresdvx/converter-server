@@ -18,7 +18,7 @@ export interface VideoFormat {
   height?: number;
   width?: number;
   fps?: number;
-  tbr?: number; // average bitrate
+  tbr?: number; 
 }
 
 export interface VideoInfo {
