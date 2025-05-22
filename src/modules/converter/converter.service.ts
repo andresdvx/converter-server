@@ -1,13 +1,14 @@
-import { BadRequestError, InternalServerError } from "x-zen";
+import { BadRequestError, InternalServerError, Logger } from "x-zen";
 import { getDownloadOptions, getVideoInfo, streamDownloadAsMp3, streamDownloadAsMp4 } from "../../common/utils/ytdlt.util";
 
 export class ConverterService {
+  private logger = new Logger({ context: ConverterService.name, timestamp: true });
   constructor() { }
 
   async getInfo(url: string) {
-    if (!url) throw new BadRequestError("url not provided");
 
     try {
+      if (!url) throw new BadRequestError("url not provided");
       const info = await getVideoInfo(url);
       const downloadOptions = getDownloadOptions(info.formats);
       const videoOptions = new Map();
@@ -24,7 +25,8 @@ export class ConverterService {
       };
 
     } catch (err) {
-      throw new InternalServerError(`Error fetching video info ${err}`);
+      this.logger.error("Error fetching video info" + err);
+      throw err;
     }
   }
 
