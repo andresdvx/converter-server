@@ -3,6 +3,7 @@ import { ZenController, RestMethod, UseMiddleware, Get, Post, ErrorHandler } fro
 import { ConverterService } from "./converter.service";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
+@UseMiddleware(authMiddleware)
 @ZenController("converter")
 export class ConverterController {
   
@@ -11,7 +12,6 @@ export class ConverterController {
   ) { }
   
   @Get("info")
-  @UseMiddleware(authMiddleware)
   @RestMethod({ statusCode: 200, message: "File Info" })
   private async getInfo(req: Request, res: Response) {
     const { url } = req.query;
