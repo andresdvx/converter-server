@@ -1,21 +1,36 @@
-import { BadRequestError, InternalServerError } from "x-zen";
-import { getVideoInfo, streamDownloadAsMp3, streamDownloadAsMp4 } from "../../common/utils/ytdlt.util";
+import { BadRequestError, InternalServerError, Logger } from "x-zen";
+import { getDownloadOptions, getVideoInfo, streamDownloadAsMp3, streamDownloadAsMp4 } from "../../common/utils/ytdlt.util";
 
 export class ConverterService {
+  private logger = new Logger({ context: ConverterService.name, timestamp: true });
   constructor() { }
 
   async getInfo(url: string) {
-    if (!url) throw new BadRequestError("url not provided");
 
     try {
+      if (!url) throw new BadRequestError("url not provided");
       const info = await getVideoInfo(url);
-      return info;
+      const downloadOptions = getDownloadOptions(info.formats);
+      const videoOptions = new Map();
+      const audioOptions = new Map();
+
+      downloadOptions.videoOptions.forEach((item) => videoOptions.set(item.resolution, item));
+      downloadOptions.audioOptions.forEach((item) => audioOptions.set(item.ext, item));
+
+      return {
+        title: info.title,
+        thumbnail: info.thumbnail,
+        videoOptions: Array.from(videoOptions.values()),
+        audioOptions: Array.from(audioOptions.values()),
+      };
+
     } catch (err) {
-      throw new InternalServerError(`Error fetching video info ${err}`);
+      this.logger.error("Error fetching video info" + err);
+      throw err;
     }
   }
 
-  async download(url: string, type: 'audio' | 'video', res: any) {
+  async download(url: string, type: 'audio' | 'video', formatId: string, res: any) {
 
     if (!url || typeof url !== "string" || !["audio", "video"].includes(type as string)) {
       throw new BadRequestError("Invalid parameters");
@@ -33,7 +48,7 @@ export class ConverterService {
         const mp3Stream = streamDownloadAsMp3(url);
         return mp3Stream.pipe(res);
       } else {
-        const videoStream = streamDownloadAsMp4(url);
+        const videoStream = streamDownloadAsMp4(url, formatId);
 
         videoStream.stderr.on("data", (data: any) => {
           console.error("yt-dlp stderr:", data.toString());
@@ -43,7 +58,9 @@ export class ConverterService {
           console.error("yt-dlp process error:", err);
           throw new InternalServerError("Error executing yt-dlp" + err);
         });
-        return videoStream.stdout.pipe(res);
+
+        videoStream.stdout.pipe(res);
+
       }
 
     } catch (err) {
