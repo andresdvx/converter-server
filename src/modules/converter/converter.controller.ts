@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
-import { RestController, RestMethod, UseMiddleware, Get, Post, ErrorHandler, Logger } from "x-zen";
+import { ZenController, RestMethod, UseMiddleware, Get, Post, ErrorHandler } from "x-zen";
 import { ConverterService } from "./converter.service";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
-@UseMiddleware(authMiddleware)
-@RestController("converter")
+@ZenController("converter")
 export class ConverterController {
-  private logger = new Logger({ context: ConverterController.name, timestamp: true });
   
-  constructor(private converterService: ConverterService) { }
+  constructor(
+    private converterService: ConverterService
+  ) { }
   
   @Get("info")
+  @UseMiddleware(authMiddleware)
   @RestMethod({ statusCode: 200, message: "File Info" })
   private async getInfo(req: Request, res: Response) {
-    this.logger.log("Fetching file info");
     const { url } = req.query;
     return await this.converterService.getInfo(url as string);
   }
@@ -30,7 +30,6 @@ export class ConverterController {
         res
       );
     } catch (err: any) {
-      this.logger.error("Error downloading file" + err);
       ErrorHandler(err, res);
     }
   }

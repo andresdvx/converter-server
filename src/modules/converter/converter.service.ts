@@ -1,6 +1,7 @@
-import { BadRequestError, InternalServerError, Logger } from "x-zen";
+import { BadRequestError, InternalServerError, Logger, ZenProvider } from "x-zen";
 import { getDownloadOptions, getVideoInfo, streamDownloadAsMp3, streamDownloadAsMp4 } from "../../common/utils/ytdlt.util";
 
+@ZenProvider()
 export class ConverterService {
   private logger = new Logger({ context: ConverterService.name, timestamp: true });
   constructor() { }
