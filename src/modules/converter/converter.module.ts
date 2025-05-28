@@ -1,12 +1,17 @@
 import { UsersModule } from "../users/users.module";
 import { ConverterController } from "./converter.controller";
 import { ConverterService } from "./converter.service";
-import { ZenModule } from "x-zen";
+import { ZenModule, ZenProvider } from "x-zen";
 
+@ZenProvider()
+export class Xd{
+
+}
 
 @ZenModule({
   controllers: [ConverterController],
-  providers: [ConverterService],
+  providers: [ConverterService, Xd],
   imports: [UsersModule]
 })
 export class ConverterModule { }
+

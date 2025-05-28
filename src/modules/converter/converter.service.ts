@@ -1,14 +1,16 @@
 import { BadRequestError, InternalServerError, Logger, ZenProvider } from "x-zen";
 import { getDownloadOptions, getVideoInfo, streamDownloadAsMp3, streamDownloadAsMp4 } from "../../common/utils/ytdlt.util";
+import { UsersService } from "../users/users.service";
 
 @ZenProvider()
 export class ConverterService {
   private logger = new Logger({ context: ConverterService.name, timestamp: true });
-  constructor() { }
+  constructor(private userService: UsersService) { }
 
   async getInfo(url: string) {
 
     try {
+      console.log('ret', this.userService.getUsers());
       if (!url) throw new BadRequestError("url not provided");
       const info = await getVideoInfo(url);
       const downloadOptions = getDownloadOptions(info.formats);
