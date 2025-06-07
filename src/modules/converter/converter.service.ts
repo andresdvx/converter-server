@@ -10,7 +10,6 @@ export class ConverterService {
   async getInfo(url: string) {
 
     try {
-      console.log('ret', this.userService.getUsers());
       if (!url) throw new BadRequestError("url not provided");
       const info = await getVideoInfo(url);
       const downloadOptions = getDownloadOptions(info.formats);
