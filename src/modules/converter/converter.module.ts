@@ -10,7 +10,7 @@ export class Xd{
 
 @ZenModule({
   controllers: [ConverterController],
-  providers: [ConverterService, Xd],
+  providers: [ConverterService],
   imports: [UsersModule]
 })
 export class ConverterModule { }
